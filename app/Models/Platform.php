@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Platform extends Model
 {
+    protected $fillable = [
+        'name',
+        'owner',
+    ];
     /** @use HasFactory<\Database\Factories\PlatformFactory> */
     use HasFactory;
 }
