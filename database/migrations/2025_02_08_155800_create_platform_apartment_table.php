@@ -12,11 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('platform_apartment', function (Blueprint $table) {
-            $table->id();
+            $table->id('plat_apart_id');
             $table->date('register_date');
             $table->boolean('premium')->default(false);
-            $table->foreignId('apartment_id')->constrained()->onDelete('cascade');
-            $table->foreignId('platform_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('apartment_id');
+            $table->foreign('apartment_id')->references('id')->on('apartments')
+            ->onDelete('cascade');
+            $table->unsignedBigInteger('platform_id');
+            $table->foreign('platform_id')->references('id')->on('platforms')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }
