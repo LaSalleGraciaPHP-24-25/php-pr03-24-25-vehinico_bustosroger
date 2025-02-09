@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Platform extends Model
 {
-    /** @use HasFactory<\Database\Factories\PlatformFactory> */
-    use HasFactory;
+    protected $fillable = ['name', 'owner'];
+
+    public function apartments()
+    {
+        return $this->belongsToMany(Apartment::class)->withPivot('register_date', 'premium');
+    }
 }
