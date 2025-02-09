@@ -13,6 +13,7 @@ class Apartment extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Indicar que la relación es de muchos a muchos
     public function platforms()
     {
         return $this->belongsToMany(Platform::class)->withPivot('register_date', 'premium');

@@ -42,6 +42,7 @@ class ApartmentController extends Controller
         return response()->json($apartment, 201);
     }
 
+    // Solo introducir necesario para el cambio
     public function update(Request $request, $id)
     {
         $apartment = Apartment::where('id', $id)->where('user_id', Auth::id())->firstOrFail();

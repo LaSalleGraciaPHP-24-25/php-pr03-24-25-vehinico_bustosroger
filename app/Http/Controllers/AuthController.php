@@ -43,6 +43,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+        // Generate token
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 

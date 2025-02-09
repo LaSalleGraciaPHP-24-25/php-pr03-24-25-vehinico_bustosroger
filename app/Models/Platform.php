@@ -8,6 +8,7 @@ class Platform extends Model
 {
     protected $fillable = ['name', 'owner'];
 
+    // Indicar que la relación es de muchos a muchos
     public function apartments()
     {
         return $this->belongsToMany(Apartment::class)->withPivot('register_date', 'premium');
