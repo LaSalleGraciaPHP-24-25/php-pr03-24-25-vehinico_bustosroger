@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,5 +11,5 @@ class Platform extends Model
     public function apartments()
     {
         return $this->belongsToMany(Apartment::class)->withPivot('register_date', 'premium');
-    use HasFactory;
+    }
 }
