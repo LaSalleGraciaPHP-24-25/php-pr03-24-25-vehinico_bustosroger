@@ -7,16 +7,21 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Apartment;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|regex:/^[a-zA-Z ]+$/',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|regex:/^[\pL\s]+$/u',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:5|confirmed',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $user = User::create([
             'name' => $request->name,
