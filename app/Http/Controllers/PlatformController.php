@@ -36,5 +36,9 @@ class PlatformController extends Controller
         return response()->json($platform);
     }
 
-    
+    public function destroy($id)
+    {
+        Platform::findOrFail($id)->delete();
+        return response()->json(['message' => 'Platform deleted']);
+    }
 }
