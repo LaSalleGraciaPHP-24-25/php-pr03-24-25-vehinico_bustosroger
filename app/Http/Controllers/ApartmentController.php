@@ -34,5 +34,17 @@ class ApartmentController extends Controller
         return response()->json($apartment, 201);
     }
 
-    
+    public function update(Request $request, $id)
+    {
+        $apartment = Apartment::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $apartment->update($request->all());
+        return response()->json($apartment);
+    }
+
+    public function destroy($id)
+    {
+        $apartment = Apartment::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $apartment->delete();
+        return response()->json(['message' => 'Apartment deleted']);
+    }
 }
