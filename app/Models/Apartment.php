@@ -10,6 +10,7 @@ class Apartment extends Model
     protected $fillable = ['address', 'city', 'postal_code', 'rented_price', 'rented', 'user_id'];
     use HasFactory;
 
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -20,5 +21,5 @@ class Apartment extends Model
     {
         return $this->belongsToMany(Platform::class, 'platform_apartment')
         ->withPivot('register_date', 'premium');
-    }
+
 }
