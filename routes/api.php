@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('platforms', PlatformController::class);
 });
 
-Route::middleware('auth:sanctum')->get('/apartments_rented', [ApartmentController::class, 'getApartmentsByRentedStatus']);
+Route::middleware('auth:sanctum')->post('/apartments_rented', [ApartmentController::class, 'getApartmentsByRentedStatus']);
 Route::middleware('auth:sanctum')->get('/apartments_high_price', [ApartmentController::class, 'getApartmentsHighPrice']);
 

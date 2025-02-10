@@ -135,11 +135,23 @@ class ApartmentController extends Controller
         ]);
 
         $apartments = Apartment::where('rented', $request->rented)
-            ->with(['user:id,email'])
-            ->get();
+            ->with(['user:id,email']) // Trae solo el email del usuario
+            ->get()
+            ->map(function ($apartment) {
+                return [
+                    'id' => $apartment->id,
+                    'address' => $apartment->address,
+                    'city' => $apartment->city,
+                    'postal_code' => $apartment->postal_code,
+                    'rented_price' => $apartment->rented_price,
+                    'rented' => $apartment->rented,
+                    'user_email' => $apartment->user->email,
+                ];
+            });
 
         return response()->json($apartments, 200);
     }
+
     public function getApartmentsHighPrice()
     {
         $apartments = Apartment::where('rented_price', '>', 1000)
