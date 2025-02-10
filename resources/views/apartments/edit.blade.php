@@ -38,5 +38,10 @@
             @endif
         </div>
         <button type="submit" class="btn btn-primary">Actualizar</button>
+
+        <div class="form-group">
+            {!! captcha_img() !!}
+            <input type="text" name="captcha" class="form-control" placeholder="Introduce el CAPTCHA" required>
+        </div>
     </form>
 @endsection

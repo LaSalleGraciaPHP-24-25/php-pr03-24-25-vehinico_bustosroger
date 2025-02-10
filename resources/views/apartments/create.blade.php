@@ -34,5 +34,10 @@
             <input type="file" name="photo" id="photo" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Crear</button>
+
+        <div class="form-group">
+            {!! captcha_img() !!}
+            <input type="text" name="captcha" class="form-control" placeholder="Introduce el CAPTCHA" required>
+        </div>
     </form>
 @endsection
