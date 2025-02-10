@@ -8,59 +8,37 @@ use App\Http\Requests\UpdatePlatformRequest;
 
 class PlatformController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Platform::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        return response()->json(Platform::findOrFail($id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePlatformRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|unique:platforms',
+            'owner' => 'required|string',
+        ]);
+
+        $platform = Platform::create($request->all());
+        return response()->json($platform, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Platform $platform)
+    public function update(Request $request, $id)
     {
-        //
+        $platform = Platform::findOrFail($id);
+        $platform->update($request->all());
+        return response()->json($platform);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Platform $platform)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePlatformRequest $request, Platform $platform)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Platform $platform)
-    {
-        //
+        Platform::findOrFail($id)->delete();
+        return response()->json(['message' => 'Platform deleted']);
     }
 }

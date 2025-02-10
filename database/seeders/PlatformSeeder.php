@@ -1,15 +1,11 @@
 <?php
-
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Platform;
 use Illuminate\Database\Seeder;
 
 class PlatformSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         Platform::factory()->count(3)->create();
