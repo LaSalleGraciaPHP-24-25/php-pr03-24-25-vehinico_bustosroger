@@ -104,4 +104,35 @@ class ApartmentController extends Controller
 
         return response()->json(['message' => 'Apartment deleted']);
     }
+    public function updatePlatform(Request $request, $id)
+    {
+        $request->validate([
+            'premium' => 'required|boolean',
+            'platform' => 'required|exists:platforms,id'
+        ]);
+
+        // Obtener el apartamento con el usuario autenticado
+        $apartment = Apartment::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+
+        // Verificar si la plataforma ya está asociada
+        $exists = $apartment->platforms()->where('platform_id', $request->platform)->exists();
+
+        if ($exists) {
+            // Si existe, actualizamos el campo "premium"
+            $apartment->platforms()->updateExistingPivot($request->platform, [
+                'premium' => $request->premium
+            ]);
+        } else {
+            // Si no existe, la agregamos con la relación correcta
+            $apartment->platforms()->attach($request->platform, [
+                'register_date' => now(),
+                'premium' => $request->premium
+            ]);
+        }
+
+        // Devolver el apartamento con las plataformas actualizadas
+        return response()->json($apartment->load('platforms:id,name'), 200);
+    } 
 }
