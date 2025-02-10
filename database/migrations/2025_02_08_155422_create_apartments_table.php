@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('apartments', function (Blueprint $table) {
-            $table->id();
+            $table->id('id');
             $table->string('address');
             $table->string('city');
             $table->string('postal_code', 10);
             $table->decimal('rented_price', 8, 2);
             $table->boolean('rented')->default(false);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }

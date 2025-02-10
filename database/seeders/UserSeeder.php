@@ -1,13 +1,14 @@
 <?php
+
 namespace Database\Seeders;
 
-use App\Models\Platform;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class PlatformSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        Platform::factory()->count(3)->create();
+        User::factory()->count(5)->create();
     }
 }
