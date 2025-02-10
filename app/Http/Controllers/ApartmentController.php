@@ -9,21 +9,18 @@ class ApartmentController extends Controller
 {
     public function index(Request $request)
     {
-        // Inicializar la consulta con las relaciones correctas
+        
         $query = Apartment::with([
             'user:id,email', // Solo traer el email del usuario
-            'platforms:id,name' // Solo traer el nombre de las plataformas
+            'platforms:id,name' 
         ]);
 
-        // Aplicar el filtro por ciudad si se proporciona
         if ($request->has('city')) {
             $query->where('city', 'like', $request->city . '%');
         }
 
-        // Obtener los apartamentos con los filtros aplicados
         $apartments = $query->get();
 
-        // Formatear la respuesta para cumplir con los requisitos
         $formattedApartments = $apartments->map(function ($apartment) {
             return [
                 'id' => $apartment->id,
@@ -32,8 +29,8 @@ class ApartmentController extends Controller
                 'postal_code' => $apartment->postal_code,
                 'rented_price' => $apartment->rented_price,
                 'rented' => $apartment->rented,
-                'user_email' => $apartment->user->email, // Solo el email del usuario
-                'platforms' => $apartment->platforms->pluck('name') // Solo nombres de plataformas
+                'user_email' => $apartment->user->email, 
+                'platforms' => $apartment->platforms->pluck('name') 
             ];
         });
 
@@ -51,8 +48,8 @@ class ApartmentController extends Controller
             'postal_code' => $apartment->postal_code,
             'rented_price' => $apartment->rented_price,
             'rented' => $apartment->rented,
-            'user_email' => $apartment->user->email, // Solo email
-            'platforms' => $apartment->platforms->pluck('name') // Solo nombres de plataformas
+            'user_email' => $apartment->user->email, 
+            'platforms' => $apartment->platforms->pluck('name') 
         ]);
     }
 
@@ -111,28 +108,36 @@ class ApartmentController extends Controller
             'platform' => 'required|exists:platforms,id'
         ]);
 
-        // Obtener el apartamento con el usuario autenticado
         $apartment = Apartment::where('id', $id)
                             ->where('user_id', Auth::id())
                             ->firstOrFail();
 
-        // Verificar si la plataforma ya está asociada
         $exists = $apartment->platforms()->where('platform_id', $request->platform)->exists();
 
         if ($exists) {
-            // Si existe, actualizamos el campo "premium"
             $apartment->platforms()->updateExistingPivot($request->platform, [
                 'premium' => $request->premium
             ]);
         } else {
-            // Si no existe, la agregamos con la relación correcta
             $apartment->platforms()->attach($request->platform, [
                 'register_date' => now(),
                 'premium' => $request->premium
             ]);
         }
 
-        // Devolver el apartamento con las plataformas actualizadas
         return response()->json($apartment->load('platforms:id,name'), 200);
     } 
+
+    public function getApartmentsByRentedStatus(Request $request)
+{
+    $request->validate([
+        'rented' => 'required|boolean'
+    ]);
+
+    $apartments = Apartment::where('rented', $request->rented)
+        ->with(['user:id,email'])
+        ->get();
+
+    return response()->json($apartments, 200);
+}
 }
