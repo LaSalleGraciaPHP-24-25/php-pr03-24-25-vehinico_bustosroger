@@ -129,15 +129,23 @@ class ApartmentController extends Controller
     } 
 
     public function getApartmentsByRentedStatus(Request $request)
-{
-    $request->validate([
-        'rented' => 'required|boolean'
-    ]);
+    {
+        $request->validate([
+            'rented' => 'required|boolean'
+        ]);
 
-    $apartments = Apartment::where('rented', $request->rented)
-        ->with(['user:id,email'])
-        ->get();
+        $apartments = Apartment::where('rented', $request->rented)
+            ->with(['user:id,email'])
+            ->get();
 
-    return response()->json($apartments, 200);
-}
+        return response()->json($apartments, 200);
+    }
+    public function getApartmentsHighPrice()
+    {
+        $apartments = Apartment::where('rented_price', '>', 1000)
+            ->with(['user:id,email'])
+            ->get();
+
+        return response()->json($apartments, 200);
+    }
 }
