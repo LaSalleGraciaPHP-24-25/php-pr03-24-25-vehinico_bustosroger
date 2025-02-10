@@ -2,30 +2,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use App\Models\Apartment;
-use Laravel\Sanctum\HasApiTokens;
+
 class ApartmentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Apartment::with(['user:id,email', 'platforms:id,name']);
+        // Inicializar la consulta con las relaciones correctas
+        $query = Apartment::with([
+            'user:id,email', // Solo traer el email del usuario
+            'platforms:id,name' // Solo traer el nombre de las plataformas
+        ]);
 
+        // Aplicar el filtro por ciudad si se proporciona
         if ($request->has('city')) {
             $query->where('city', 'like', $request->city . '%');
         }
 
+        // Obtener los apartamentos con los filtros aplicados
         $apartments = $query->get();
 
-        return response()->json($apartments);
+        // Formatear la respuesta para cumplir con los requisitos
+        $formattedApartments = $apartments->map(function ($apartment) {
+            return [
+                'id' => $apartment->id,
+                'address' => $apartment->address,
+                'city' => $apartment->city,
+                'postal_code' => $apartment->postal_code,
+                'rented_price' => $apartment->rented_price,
+                'rented' => $apartment->rented,
+                'user_email' => $apartment->user->email, // Solo el email del usuario
+                'platforms' => $apartment->platforms->pluck('name') // Solo nombres de plataformas
+            ];
+        });
+
+        return response()->json($formattedApartments);
     }
 
     public function show($id)
     {
         $apartment = Apartment::with(['user:id,email', 'platforms:id,name'])->findOrFail($id);
-        return response()->json($apartment);
+
+        return response()->json([
+            'id' => $apartment->id,
+            'address' => $apartment->address,
+            'city' => $apartment->city,
+            'postal_code' => $apartment->postal_code,
+            'rented_price' => $apartment->rented_price,
+            'rented' => $apartment->rented,
+            'user_email' => $apartment->user->email, // Solo email
+            'platforms' => $apartment->platforms->pluck('name') // Solo nombres de plataformas
+        ]);
     }
 
     public function store(Request $request)
@@ -39,21 +67,41 @@ class ApartmentController extends Controller
         ]);
 
         $apartment = Apartment::create(array_merge($request->all(), ['user_id' => Auth::id()]));
-        return response()->json($apartment, 201);
+
+        return response()->json([
+            'id' => $apartment->id,
+            'address' => $apartment->address,
+            'city' => $apartment->city,
+            'postal_code' => $apartment->postal_code,
+            'rented_price' => $apartment->rented_price,
+            'rented' => $apartment->rented,
+            'user_email' => $apartment->user->email,
+            'platforms' => $apartment->platforms->pluck('name')
+        ], 201);
     }
 
-    // Solo introducir necesario para el cambio
     public function update(Request $request, $id)
     {
         $apartment = Apartment::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $apartment->update($request->all());
-        return response()->json($apartment);
+
+        return response()->json([
+            'id' => $apartment->id,
+            'address' => $apartment->address,
+            'city' => $apartment->city,
+            'postal_code' => $apartment->postal_code,
+            'rented_price' => $apartment->rented_price,
+            'rented' => $apartment->rented,
+            'user_email' => $apartment->user->email,
+            'platforms' => $apartment->platforms->pluck('name')
+        ]);
     }
 
     public function destroy($id)
     {
         $apartment = Apartment::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $apartment->delete();
+
         return response()->json(['message' => 'Apartment deleted']);
     }
 }
