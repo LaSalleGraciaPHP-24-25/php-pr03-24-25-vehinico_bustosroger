@@ -38,7 +38,7 @@ class ApartmentViewController extends Controller
             'rented_price' => 'required|numeric',
             'rented' => 'required|boolean',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'user_id' => 'required|exists:users,id', 
+            'user_id' => 'required|exists:users,id',
         ]);
 
         if ($request->hasFile('photo')) {

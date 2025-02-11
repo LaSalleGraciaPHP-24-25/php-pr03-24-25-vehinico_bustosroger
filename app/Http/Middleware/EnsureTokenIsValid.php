@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EnsureTokenIsValid
 {
+    // Validació del token
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::guard('sanctum')->check()) {

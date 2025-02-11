@@ -1,17 +1,16 @@
 <?php
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Apartment;
 
-
 class ApartmentController extends Controller
 {
     public function index(Request $request)
     {
-       
+
         $query = Apartment::with([
             'user:id,email', // Solo traer el email del usuario
             'platforms:id,name'

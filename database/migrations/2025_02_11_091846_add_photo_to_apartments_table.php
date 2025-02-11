@@ -10,19 +10,19 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::table('apartments', function (Blueprint $table) {
-        $table->string('photo')->nullable()->after('rented');
-    });
-}
+    {
+        Schema::table('apartments', function (Blueprint $table) {
+            $table->string('photo')->nullable()->after('rented');
+        });
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down()
-{
-    Schema::table('apartments', function (Blueprint $table) {
-        $table->dropColumn('photo');
-    });
-}
+    {
+        Schema::table('apartments', function (Blueprint $table) {
+            $table->dropColumn('photo');
+        });
+    }
 };
