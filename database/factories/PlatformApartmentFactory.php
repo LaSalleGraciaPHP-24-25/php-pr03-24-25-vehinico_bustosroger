@@ -8,7 +8,6 @@ use App\Models\Platform;
 
 class PlatformApartmentFactory extends Factory
 {
-
     public function definition(): array
     {
         return [

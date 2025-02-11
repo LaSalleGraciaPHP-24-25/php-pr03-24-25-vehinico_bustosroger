@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use App\Models\Apartment;
@@ -15,6 +16,7 @@ class ApartmentFactory extends Factory
             'postal_code' => $this->faker->postcode(),
             'rented_price' => $this->faker->randomFloat(2, 500, 2000),
             'rented' => $this->faker->boolean(),
+
             'user_id' => User::factory(),
         ];
     }
