@@ -6,30 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Apartment;
+use App\Models\User;
 
 class ApartmentViewController extends Controller
 {
-    // 🔹 Mostrar lista de apartamentos
     public function index()
     {
         $apartments = Apartment::orderBy('city')->orderBy('address')->paginate(10);
         return view('apartments.index', compact('apartments'));
     }
 
-    // 🔹 Mostrar detalles de un apartamento
     public function show($id)
     {
         $apartment = Apartment::findOrFail($id);
         return view('apartments.show', compact('apartment'));
     }
 
-    // 🔹 Mostrar formulario de creación
     public function create()
     {
-        return view('apartments.create');
+        // Obtener todos los usuarios desde la base de datos
+        $users = \App\Models\User::all(); // Asegúrate de importar el modelo User si no lo has hecho
+        return view('apartments.create', compact('users'));
     }
 
-    // 🔹 Guardar un nuevo apartamento
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -39,6 +38,7 @@ class ApartmentViewController extends Controller
             'rented_price' => 'required|numeric',
             'rented' => 'required|boolean',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'user_id' => 'required|exists:users,id', 
         ]);
 
         if ($request->hasFile('photo')) {
@@ -47,11 +47,9 @@ class ApartmentViewController extends Controller
         }
 
         Apartment::create($validatedData);
-
         return redirect()->route('apartments.index')->with('success', 'Apartamento creado con éxito');
     }
 
-    // 🔹 Mostrar formulario de edición
     public function edit($id)
     {
         $apartment = Apartment::findOrFail($id);
