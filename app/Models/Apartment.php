@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Apartment extends Model
 {
-    protected $fillable = ['address', 'city', 'postal_code', 'rented_price', 'rented', 'user_id'];
+    protected $fillable = [
+        'address', 'city', 'postal_code', 'rented_price', 'rented', 'photo', 'user_id'];    
     use HasFactory;
 
 
@@ -22,4 +23,5 @@ class Apartment extends Model
         return $this->belongsToMany(Platform::class, 'platform_apartment')
         ->withPivot('register_date', 'premium');
 
+    }
 }
